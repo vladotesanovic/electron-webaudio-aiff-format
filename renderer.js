@@ -7,6 +7,7 @@
 
 const audioCtx = new window.AudioContext();
 const audioElement = document.querySelector('audio');
+const timeDisplay = document.querySelector('p');
 
 const streamNode = audioCtx.createMediaStreamDestination();
 const gainNode = audioCtx.createGain();
@@ -39,6 +40,16 @@ pannerControl.addEventListener('input', function() {
 volumeControl.addEventListener('input', function() {
     gainNode.gain.value = this.value;
 }, false);
+
+function displayTime() {
+    if(audioCtx && audioCtx.state !== 'closed') {
+        timeDisplay.textContent = 'Current context time: ' + audioCtx.currentTime.toFixed(3);
+    } else {
+        timeDisplay.textContent = 'Current context time: No context exists.'
+    }
+    requestAnimationFrame(displayTime);
+}
+displayTime();
 
 getAudioBuffer("./6771641_Sun_Is_Shining_Extended.aiff").then(function(audioBuffer) {
     play(audioBuffer);
